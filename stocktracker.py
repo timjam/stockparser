@@ -21,6 +21,11 @@ def main():
 	sock = urllib2.urlopen( url )
 	feed = sock.read()
 
+	#etree testing here
+	data = etree.HTML(feed) #Converts the html feed to etree, that can be traversed by xpath expressions
+	div = data.xpath('//head/title/text()') #Selects the text from the first title inside the <head> tags
+	print div[0].split("|")[0] #Takes the one and only element returned by the above line, splits it by the character "|", creates the new list from the splitted elements and chooses the first element, which is known to be the name of the stock
+
 	#soup = BeautifulSoup(open("testhtml.html"), 'lxml')
 	soup = BeautifulSoup( feed, 'lxml' )
 
