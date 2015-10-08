@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import urllib2
 import os
 from bs4 import BeautifulSoup
@@ -21,9 +24,13 @@ def main():
 	#soup = BeautifulSoup(open("testhtml.html"), 'lxml')
 	soup = BeautifulSoup( feed, 'lxml' )
 
+	title = soup.find("title")
+	stockname = soup.find("div", {"id": "EAS_11667"})
 	interestingDiv = soup.find_all("p", text="Tunnuslukuja")
 
 	print interestingDiv
+	print stockname
+	print title
 
 	#for elems in interestingDiv:
 	#	for row in elems.find_all("p", text="Tunnuslukuja"):
