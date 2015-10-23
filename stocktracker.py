@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+# This code is not very generic and multipurpose. So far it can only handle these specific urls which were used when designing this code.
 
 import urllib2
 import os
@@ -24,35 +26,49 @@ def main():
 	# Extract the title
 	titletag = data.xpath('//head/title/text()') #Selects the text from the first title inside the <head> tags
 	title = titletag[0].split("|")[0] #Takes the one and only element returned by the above line, splits it by the character "|", creates the new list from the splitted elements and chooses the first element, which is known to be the name of the stock
-	print title
+	#print title
 
 
 	# Extract the interesting div which contains the <p> "tunnuslukuja"
 
-	rootDiv = data.xpath(".//p[text()='Tunnuslukuja']")[0].getparent() # selects a <p> with text 'Tunnuslukuja', creates a list of it, chooses the first element from the list (it is known that there's only one element) and gets its parent
-
+	rootDiv = data.xpath(".//p[text()='Tunnuslukuja']")[0].getparent()[1] # selects a <p> with text 'Tunnuslukuja', creates a list of it, chooses the first element from the list (it is known that there's only one element) and gets its parent. The [1] at the end then chooses the second child of the original root
 	
+	texts = []
+	values = []
+
 	for element in rootDiv.iter():
+
+		print element.tag
 
 		if element.tag == 'ul': 
 			break 					# It is known that in this html chunk all the interesting data is parsed when we encounter first ul tag
+									# Not necessary anymore if rootDiv is chosen to be the table element. Done by adding the [1] after the rootDiv on line 34
 
 		if element.tag == 'tr': 
-			print ""				# Do nothing when encountering a new row
+			pass
+			#print ""				# Do nothing when encountering a new row
 
-		if element.tag == 'td' or 'br':
+		if (element.tag == "td") or (element.tag == "br"):
 			try:
-				print element.tag
+				print "TAG: " + element.tag
 			except AttributeError:
 				pass
 
 			try:
-				print element.text.encode('utf8')
+				text = element.text.replace(u'\x80', 'e').replace(u'\u20ac', 'e') #For some reason \x80 covers the euro character as well
+				print "TEXT: " + text
+
+				texts.append( text )
+
 			except AttributeError:
 				pass
 
 			try:
-				print element.tail.encode('utf8')
+				tail = element.tail.replace(u'\u20ac', 'e')
+				print "TAIL: " + tail
+
+				values.append( tail )
+
 			except AttributeError:
 				pass
 
