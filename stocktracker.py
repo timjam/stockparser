@@ -31,27 +31,7 @@ def main():
 
 	rootDiv = data.xpath(".//p[text()='Tunnuslukuja']")[0].getparent() # selects a <p> with text 'Tunnuslukuja', creates a list of it, chooses the first element from the list (it is known that there's only one element) and gets its parent
 
-	#print rootDiv.tag, rootDiv.attrib
-
-	el = rootDiv[1][0][0][0]
-
-	try:
-		print "TAG: " + el.tag
-	except TypeError:
-		print "TAG: None"
-
-	try:
-		print "\nTEXT: " + el.text
-	except TypeError:
-		print "TEXT: None"
-
-	try:
-		print "\nTAIL: " + el.tail.replace(u'\u20ac', 'e')
-	except TypeError:
-		print "TAIL: None"
-
-
-
+	
 	for element in rootDiv.iter():
 
 		if element.tag == 'ul': 
@@ -75,11 +55,6 @@ def main():
 				print element.tail.encode('utf8')
 			except AttributeError:
 				pass
-
-
-	#print
-	#print
-	#print etree.tostring(rootDiv, pretty_print=True)
 
 		
 
