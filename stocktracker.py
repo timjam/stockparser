@@ -38,12 +38,6 @@ def main():
 
 	for element in rootDiv.iter():
 
-		print element.tag
-
-		if element.tag == 'ul': 
-			break 					# It is known that in this html chunk all the interesting data is parsed when we encounter first ul tag
-									# Not necessary anymore if rootDiv is chosen to be the table element. Done by adding the [1] after the rootDiv on line 34
-
 		if element.tag == 'tr': 
 			pass
 			#print ""				# Do nothing when encountering a new row
