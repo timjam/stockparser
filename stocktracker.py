@@ -31,7 +31,57 @@ def main():
 
 	rootDiv = data.xpath(".//p[text()='Tunnuslukuja']")[0].getparent() # selects a <p> with text 'Tunnuslukuja', creates a list of it, chooses the first element from the list (it is known that there's only one element) and gets its parent
 
-	print rootDiv.tag, rootDiv.attrib
+	#print rootDiv.tag, rootDiv.attrib
+
+	el = rootDiv[1][0][0][0]
+
+	try:
+		print "TAG: " + el.tag
+	except TypeError:
+		print "TAG: None"
+
+	try:
+		print "\nTEXT: " + el.text
+	except TypeError:
+		print "TEXT: None"
+
+	try:
+		print "\nTAIL: " + el.tail.replace(u'\u20ac', 'e')
+	except TypeError:
+		print "TAIL: None"
+
+
+
+	for element in rootDiv.iter():
+
+		if element.tag == 'ul': 
+			break 					# It is known that in this html chunk all the interesting data is parsed when we encounter first ul tag
+
+		if element.tag == 'tr': 
+			print ""				# Do nothing when encountering a new row
+
+		if element.tag == 'td' or 'br':
+			try:
+				print element.tag
+			except AttributeError:
+				pass
+
+			try:
+				print element.text.encode('utf8')
+			except AttributeError:
+				pass
+
+			try:
+				print element.tail.encode('utf8')
+			except AttributeError:
+				pass
+
+
+	#print
+	#print
+	#print etree.tostring(rootDiv, pretty_print=True)
+
+		
 
 
 main()
