@@ -5,7 +5,9 @@
 
 import urllib2
 import os
-from stockparser import stockParser
+import sqlite3
+#from stockparser import stockParser
+#from connectionManager import connectionManager as cm
 from lxml import etree
 
 url = "http://www.kauppalehti.fi/5/i/porssi/porssikurssit/osake/?klid=1059" #Wärtsilä
@@ -15,9 +17,10 @@ def main():
 
 	os.system('cls')
 
+	#cm.init() #Initializes and connects to the stockdata database
+
 	sock = urllib2.urlopen( url )
 	feed = sock.read()
-
 
 	#etree testing here
 
@@ -43,14 +46,14 @@ def main():
 			#print ""				# Do nothing when encountering a new row
 
 		if (element.tag == "td") or (element.tag == "br"):
-			try:
-				print "TAG: " + element.tag
-			except AttributeError:
-				pass
+			#try:
+			#	print "TAG: " + element.tag
+			#except AttributeError:
+			#	pass
 
 			try:
-				text = element.text.replace(u'\x80', 'e').replace(u'\u20ac', 'e') #For some reason \x80 covers the euro character as well
-				print "TEXT: " + text
+				text = element.text.replace(u'\xa0', ' ').replace(u'\x80', 'e').replace(u'\u20ac', 'e') #For some reason \x80 covers the euro character as well
+				#print "TEXT: " + text
 
 				texts.append( text )
 
@@ -59,14 +62,33 @@ def main():
 
 			try:
 				tail = element.tail.replace(u'\u20ac', 'e')
-				print "TAIL: " + tail
+				#print "TAIL: " + tail
 
 				values.append( tail )
 
 			except AttributeError:
 				pass
+	
+	stockid = url.split('=')[1]
 
-		
+	# Most horrible line ever. Refactor this (as well as everything else :D )
+	valueList = [stockid, title, values[1].encode('ascii').split('(')[1].split(')')[0], texts[2].encode('ascii'), texts[4].encode('ascii'), texts[6].encode('ascii'), texts[8].encode('ascii'), texts[10].encode('ascii')]
+
+	# Store the values into the database. Separata all database related things into own file and class connectionManager
+
+	conn = sqlite3.connect('stockdata.db')
+	cursor = conn.cursor()
+
+	sql = 'CREATE TABLE IF NOT EXISTS stockvalues (id, stockname, curprice, eps, pb, pe, dps, marketvalue)'
+	cursor.execute(sql)
+
+	sql2 = 'INSERT INTO stockvalues VALUES (?,?,?,?,?,?,?,?)'
+	cursor.execute(sql2, valueList)
+
+	for row in cursor.execute('SELECT * FROM stockvalues'):
+		print row
+
+	conn.close()
 
 
 main()
