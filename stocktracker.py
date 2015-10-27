@@ -72,7 +72,7 @@ def main():
 	stockid = url.split('=')[1]
 
 	# Most horrible line ever. Refactor this (as well as everything else :D )
-	valueList = [stockid, title, values[1].encode('ascii').split('(')[1].split(')')[0], texts[2].encode('ascii'), texts[4].encode('ascii'), texts[6].encode('ascii'), texts[8].encode('ascii'), texts[10].encode('ascii')]
+	valueList = [stockid, title, values[1].split('(')[1].split(')')[0], texts[2], texts[4], texts[6], texts[8], texts[10].split(' ')[1] + texts[10].split(' ')[2]]
 
 	# Store the values into the database. Separata all database related things into own file and class connectionManager
 
@@ -86,7 +86,8 @@ def main():
 	cursor.execute(sql2, valueList)
 
 	for row in cursor.execute('SELECT * FROM stockvalues'):
-		print row
+		for element in row:
+			print element
 
 	conn.close()
 
