@@ -7,7 +7,7 @@ import urllib2
 import os
 import sqlite3
 #from stockparser import stockParser
-#from connectionManager import connectionManager as cm
+from connectionManager import connectionManager as cm
 from lxml import etree
 
 url = "http://www.kauppalehti.fi/5/i/porssi/porssikurssit/osake/?klid=1059" #Wärtsilä
@@ -76,20 +76,30 @@ def main():
 
 	# Store the values into the database. Separata all database related things into own file and class connectionManager
 
-	conn = sqlite3.connect('stockdata.db')
-	cursor = conn.cursor()
+	cm.init()
 
-	sql = 'CREATE TABLE IF NOT EXISTS stockvalues (id, stockname, curprice, eps, pb, pe, dps, marketvalue)'
-	cursor.execute(sql)
+	cm.dbinsert(valueList)
 
-	sql2 = 'INSERT INTO stockvalues VALUES (?,?,?,?,?,?,?,?)'
-	cursor.execute(sql2, valueList)
+	cm.dbshow()
 
-	for row in cursor.execute('SELECT * FROM stockvalues'):
-		for element in row:
-			print element
+	cm.dbclose()
 
-	conn.close()
+
+
+	#conn = sqlite3.connect('stockdata.db')
+	#cursor = conn.cursor()
+
+	#sql = 'CREATE TABLE IF NOT EXISTS stockvalues (stocknumber, stockname, curprice, eps, pb, pe, dps, marketvalue)'
+	#cursor.execute(sql)
+
+	#sql2 = 'INSERT INTO stockvalues VALUES (?,?,?,?,?,?,?,?)'
+	#cursor.execute(sql2, valueList)
+	#conn.commit() # Need to commit insertions after insert
+
+	#for row in cursor.execute('SELECT * FROM stockvalues'):
+	#	print row
+
+	#conn.close()
 
 
 main()
