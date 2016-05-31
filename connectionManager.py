@@ -5,35 +5,36 @@
 
 import sqlite3 as sql
 
-class connectionManager():
-
-	dbname = 'stockdata.db'
-	global conn
-	global c
+class connectionManager(object):
 	
 
-	def init(self):
+	def __init__(self, db):
 
-		conn = sqlite3.connect(self.dbname)
-		c = conn.cursor()
-		c.execute("CREATE TABLE IF NOT EXISTS stockvalues (stocknumber, stockname, curprice, eps, pb, pe, dps, marketvalue)")
+		self.conn = sql.connect(db)
+		self.conn.execute("CREATE TABLE IF NOT EXISTS stockvalues (fetchtime, stocknumber, stockname, curprice, eps, pb, pe, dps, marketvalue)")
+		self.conn.commit()
+		self.cur = self.conn.cursor()
 
 	
 
 	def dbinsert(self, values):
 
-		cursor.execute("INSERT INTO stockvalues VALUES (?,?,?,?,?,?,?,?)", values)
-		conn.commit
+		self.cur.execute("INSERT INTO stockvalues VALUES (?,?,?,?,?,?,?,?,?)", values)
+		self.conn.commit()
+
+		#c = sql.connect(self.dbname).cursor()
+		#c.execute("INSERT INTO stockvalues VALUES (?,?,?,?,?,?,?,?)", values)
+		#c.commit
 
 
 
 	def dbshow(self):
 
-		for row in cursor.execute("SELECT * FROM stockvalues"):
+		for row in self.cur.execute("SELECT * FROM stockvalues"):
 			print row
 
 
 
-	def dbclose():
+	def dbclose(self):
 
-		conn.close()
+		self.conn.close()

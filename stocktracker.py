@@ -7,8 +7,9 @@ import urllib2
 import os
 import sqlite3
 #from stockparser import stockParser
-from connectionManager import connectionManager as cm
+from connectionManager import connectionManager
 from lxml import etree
+from datetime import datetime
 
 url = "http://www.kauppalehti.fi/5/i/porssi/porssikurssit/osake/?klid=1059" #Wärtsilä
 url2 = "http://www.kauppalehti.fi/5/i/porssi/porssikurssit/osake/?klid=1091" #Sanoma
@@ -71,12 +72,16 @@ def main():
 	
 	stockid = url.split('=')[1]
 
+	fetchtime = datetime.utcnow()
+
 	# Most horrible line ever. Refactor this (as well as everything else :D )
-	valueList = [stockid, title, values[1].split('(')[1].split(')')[0], texts[2], texts[4], texts[6], texts[8], texts[10].split(' ')[1] + texts[10].split(' ')[2]]
+	valueList = [fetchtime, stockid, title, values[1].split('(')[1].split(')')[0], texts[2], texts[4], texts[6], texts[8], texts[10].split(' ')[1] + texts[10].split(' ')[2]]
 
 	# Store the values into the database. Separata all database related things into own file and class connectionManager
 
-	cm.init()
+	#print datetime.utcnow()
+
+	cm = connectionManager("stockdata.db")
 
 	cm.dbinsert(valueList)
 
