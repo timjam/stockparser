@@ -49,9 +49,9 @@ if __name__== "__main__":
 	db.setDatabaseName("stockdata.db")
 
 	model = QtSql.QSqlTableModel()
-	initializeModel(model)
 
 	app = QtGui.QApplication(sys.argv)
 	window = GUIhandler()
+	window.initializeModel(model)
 	window.show()
 	sys.exit(app.exec_())
