@@ -11,6 +11,7 @@ from connectionManager import connectionManager
 from lxml import etree
 from datetime import datetime
 
+#klid range (1000-2070)
 url = "http://www.kauppalehti.fi/5/i/porssi/porssikurssit/osake/?klid=1059" #Wärtsilä
 url2 = "http://www.kauppalehti.fi/5/i/porssi/porssikurssit/osake/?klid=1091" #Sanoma
 

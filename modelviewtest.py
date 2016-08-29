@@ -18,12 +18,12 @@ class ExampleApp(QtGui.QMainWindow, stockGUI.Ui_MainWindow):
 
 
 	def browse_folder(self):
-		self.listWidget.clear()
+		self.tableWidget.clear() #tableWidget is listWidget in original example
 		directory = QtGui.QFileDialog.getExistingDirectory(self, 'Pick a folder')
 
 		if directory:
 			for file_name in os.listdir(directory):
-				self.listWidget.addItem(file_name)
+				self.tableWidget.addItem(file_name) #tableWidget is listWidget in original example
 
 
 
