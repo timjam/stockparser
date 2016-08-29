@@ -19,11 +19,17 @@ class ExampleApp(QtGui.QMainWindow, stockGUI.Ui_MainWindow):
 
 	def browse_folder(self):
 		self.tableWidget.clear() #tableWidget is listWidget in original example
+
+		self.tableWidget.setRowCount(30)
+		self.tableWidget.setColumnCount(1)
+
 		directory = QtGui.QFileDialog.getExistingDirectory(self, 'Pick a folder')
 
 		if directory:
+			row = 0
 			for file_name in os.listdir(directory):
-				self.tableWidget.addItem(file_name) #tableWidget is listWidget in original example
+				self.tableWidget.setItem(row, 0, QtGui.QTableWidgetItem(file_name)) #tableWidget is listWidget in original example
+				row = row+1
 
 
 
